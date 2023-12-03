@@ -16,7 +16,7 @@ spec: # spec of deployment
       - name: nginx
         image: nginx:1.14.2
         ports:
-        - containerPort: 80
+        - containerPort: 80 # the port where application is serving.
 ---
 apiVersion: v1
 kind: Service
