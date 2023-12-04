@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: nginx.ingress.com # hostname
+    http: # http forwarding to internal service
+      paths:
+      - backend: 
+          service: 
+            name: nginx-svc # internal service which you want to access.
+            port: 
+              number: 8080 # service port.
+        pathType: Prefix
+        path: /test

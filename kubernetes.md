@@ -89,9 +89,9 @@ To get the url of external service
 minikube service <service_name> --url
 ```
 
-### ExternalName
+## Deployments
 
-## To create a deployment
+### To create a deployment
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -165,12 +165,73 @@ kubectl scale deployment <deployment_name> --replicas=5
 kubectl autoscale deployment/deployment-nginx --min=2 --max=10 --cpu-percent=50
 ```
 
+## Ingress
+It is used for DNS. We need an ingress controller. For that we use ingresss controller.
+Ingress exposes HTTP and HTTPS routes from outside to services within cluster. Traffic routing is controlled by rules defined on the ingress resource. 
+```
+client -> ingress_controller -> ingress -> routing_rule -> service -> pod
+```
+
+### Install ingress-controller in minikube
+Run the following command, and it will enable nginx-ingress controller (this nginx-ingress controller can also be used in production).
+
+```
+minikube addons enable ingress
+```
+
+Write the ingress yaml;
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+spec:
+  rules:
+  - host: nginx.ingress.com # hostname
+    http: # http forwarding to internal service
+      paths:
+      - backend: 
+          service: 
+            name: nginx-svc # internal service which you want to access.
+            port: 
+              number: 8080 # service port.
+        pathType: Prefix
+        path: /
+```
+
+Configure the hostname in /etc/host config file. We can get the ip address of ingress by `kubectl get ingress --watch`
+```
+192.168.49.2 (ip_address of ingress)    nginx.ingress.com (hostname defined in ingress)
+```
+
+To configure a path for hostname, we have to use annotations;
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: nginx.ingress.com # hostname
+    http: # http forwarding to internal service
+      paths:
+      - backend: 
+          service: 
+            name: nginx-svc # internal service which you want to access.
+            port: 
+              number: 8080 # service port.
+        pathType: Prefix
+        path: /test
+```
+
 ## To create a config map
 
 ## To create a secret
 Secrets live in k8s not in application repository
 
-## To create ingress
-Torepresent the address of external service in human readible address. 
+
 
 ## To create stateful set
