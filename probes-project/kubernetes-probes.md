@@ -1,4 +1,4 @@
-### Kubernetes Probes
+### [Kubernetes Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
 #### Liveness Probe
 - This probe determines when to re-start a container. It detects if application falls into broken states that cannot be recovered without restarting it. `kubelet` uses this probe to determine when to restart the container
